@@ -14,6 +14,7 @@ public class CustomGrab : MonoBehaviour
     
     bool grabbing = false;
 
+    //Position and rotation
     private Vector3 relativePos;
     private Vector3 deltaPos;
     private Vector3 previousPos;
@@ -58,8 +59,6 @@ public class CustomGrab : MonoBehaviour
             } else {
                 handObject.GetComponent<MeshRenderer>().material = material3;
             }
-            
-
 
             // Grab nearby object or the object in the other hand
             if (!grabbedObject)
@@ -70,15 +69,18 @@ public class CustomGrab : MonoBehaviour
                 // Change these to add the delta position and rotation instead
                 // Save the position and rotation at the end of Update function, so you can compare previous pos/rot to current here
 
-                relativePos = grabbedObject.position - transform.position;
-
                 deltaPos = transform.position - previousPos;
                 deltaRot = transform.rotation * Quaternion.Inverse(previousRot);
 
+                //Vector from hand to object, rotated correctly
+                relativePos = grabbedObject.position - transform.position;
                 relativePos = deltaRot * relativePos;
 
+                //Grabbed object's new pos and rot
                 grabbedObject.position = transform.position + relativePos + deltaPos;
                 grabbedObject.rotation = deltaRot * grabbedObject.rotation;
+
+
                 //Add second rotation and position change, if multiplication is set on!
                 if (isMultiplied) {
                     grabbedObject.rotation = deltaRot * grabbedObject.rotation;
