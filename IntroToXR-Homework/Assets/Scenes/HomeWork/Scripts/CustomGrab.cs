@@ -7,7 +7,7 @@ public class CustomGrab : MonoBehaviour
 {
     // This script should be attached to both controller objects in the scene
     // Make sure to define the input in the editor (LeftHand/Grip and RightHand/Grip recommended respectively)
-    CustomGrab otherHand = null;
+    //CustomGrab otherHand = null;
     public List<Transform> nearObjects = new List<Transform>();
     public Transform grabbedObject = null;
     public InputActionReference action;
@@ -29,40 +29,43 @@ public class CustomGrab : MonoBehaviour
     public GameObject handObject;
 
     //For the extra feature
-    bool isMultiplied = false;
-    public InputActionReference actionForMultiplier;
+    //bool isMultiplied = false;
+    //public InputActionReference actionForMultiplier;
 
     private void Start()
     {
         action.action.Enable();
-        actionForMultiplier.action.Enable();
-
+        //actionForMultiplier.action.Enable();
+        /* DOUBLE GRAB DISABLED
         // Find the other hand
         foreach(CustomGrab c in transform.parent.GetComponentsInChildren<CustomGrab>())
         {
             if (c != this)
                 otherHand = c;
-        }
+        }*/
     }
 
     void Update()
     {
         //Extra feature
-        isMultiplied = actionForMultiplier.action.IsPressed();
+        //isMultiplied = actionForMultiplier.action.IsPressed();
 
         grabbing = action.action.IsPressed();
         if (grabbing)
         {
             //Change color if grabbing or double grabbing!
-            if (!isMultiplied) {
+            /*if (!isMultiplied) {
                 handObject.GetComponent<MeshRenderer>().material = material2;
             } else {
                 handObject.GetComponent<MeshRenderer>().material = material3;
-            }
+            }*/
+
+            //handObject.GetComponent<MeshRenderer>().material = material2;
 
             // Grab nearby object or the object in the other hand
             if (!grabbedObject)
-                grabbedObject = nearObjects.Count > 0 ? nearObjects[0] : otherHand.grabbedObject;
+                //DOUBLE GRAB DISABLED
+                grabbedObject = nearObjects.Count > 0 ? nearObjects[0] : null;//otherHand.grabbedObject;
 
             if (grabbedObject)
             {
@@ -82,11 +85,11 @@ public class CustomGrab : MonoBehaviour
 
 
                 //Add second rotation and position change, if multiplication is set on!
-                if (isMultiplied) {
+                /*if (isMultiplied) {
                     grabbedObject.rotation = deltaRot * grabbedObject.rotation;
                     relativePos = deltaRot * relativePos;
                     grabbedObject.position = transform.position + relativePos + deltaPos;
-                }
+                }*/
 
                 //grabbedObject.position = transform.position;
                 //grabbedObject.rotation = transform.rotation;
@@ -99,7 +102,7 @@ public class CustomGrab : MonoBehaviour
 
         //Change color back to normal, if not grabbing
         if(!grabbing) {
-            handObject.GetComponent<MeshRenderer>().material = material1;
+            //handObject.GetComponent<MeshRenderer>().material = material1;
         }
 
         // Should save the current position and rotation here
