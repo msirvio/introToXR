@@ -17,6 +17,7 @@ public class ArrowCollision : MonoBehaviour
 
     void OnTriggerEnter(Collider collision) {
         if(collision.gameObject.CompareTag("target") && !hit) {
+            //gameObject.transform.SetParent(collision.gameObject.transform);
             gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition;
             int point = collision.gameObject.GetComponent<CollisionChecker>().points;
             Debug.Log("Arrow trigger: " + point);

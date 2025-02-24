@@ -14,6 +14,8 @@ public class BowLogic : MonoBehaviour
     public GameObject bowString;
     Rigidbody arrowRigidBody;
     LineRenderer lineRenderer;
+
+    public int arrowsLeft = 10;
     public InputActionReference action1;
     public InputActionReference action2;
 
@@ -28,7 +30,7 @@ public class BowLogic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        grabbing = action1.action.IsPressed() && action2.action.IsPressed();
+        grabbing = action1.action.IsPressed();// && action2.action.IsPressed();
 
         Vector3 fromPullToGrip = pullPoint.position - gripPoint.position;
         fromPullToGrip = pullPoint.rotation * fromPullToGrip;
@@ -41,8 +43,10 @@ public class BowLogic : MonoBehaviour
         shootPoint.LookAt(helper);
         shootPoint.Rotate(0, -90, 0);
 
-        if (!grabbing) {
-            if (readyToShoot) {
+        if (arrowsLeft <= 0) {
+
+        } else if (!grabbing) {
+            if (readyToShoot && !defaultPoint.transform.position.Equals(pullPoint.transform.position)) {
                 //TAKE THE SHOT
                 GameObject projectile = Instantiate(
                     arrow, 
@@ -50,6 +54,7 @@ public class BowLogic : MonoBehaviour
                     pullPoint.rotation
                 );
                 projectile.tag = "arrow";
+                projectile.name = "Arrow";
                 arrowRigidBody = projectile.GetComponent<Rigidbody>();
 
                 if (arrowRigidBody != null) {
@@ -59,6 +64,7 @@ public class BowLogic : MonoBehaviour
                     );
                 }
 
+                arrowsLeft--;
                 pullPoint.position = defaultPoint.position;
                 readyToShoot = false;
                 float x = -0.2f, y = 0.0f, z = 0.0125f;
@@ -73,5 +79,9 @@ public class BowLogic : MonoBehaviour
 
             lineRenderer.SetPosition(1, pullPoint.localPosition);
         }
+    }
+
+    public void SetArrowCount(int arrowCount) {
+        arrowsLeft = arrowCount;
     }
 }
