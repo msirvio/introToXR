@@ -5,7 +5,7 @@ public class ResetScript : MonoBehaviour
 
     public GameObject scoreCounter;
     public GameObject bow;
-    bool readyToReset = false;
+    public Transform bowResetLocation;
     ScoreUpdater scoreUpdater;
     BowLogic arrowUpdater;
     
@@ -16,26 +16,17 @@ public class ResetScript : MonoBehaviour
         arrowUpdater = bow.GetComponent<BowLogic>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (readyToReset) {
-
-            scoreUpdater.SetScore(0);
-            arrowUpdater.SetArrowCount(10);
-
-            GameObject[] arrows = GameObject.FindGameObjectsWithTag("arrow");
-            foreach(GameObject arrow in arrows) {
-                if (arrow.name == "Arrow") {
-                    Destroy(arrow);
-                }
-            }
-
-            readyToReset = false;
-        }
-    }
-
     public void ActivateReset() {
-        readyToReset = true;
+        scoreUpdater.SetScore(0);
+        arrowUpdater.SetArrowCount(10);
+
+        GameObject[] arrows = GameObject.FindGameObjectsWithTag("arrow");
+        foreach(GameObject arrow in arrows) {
+            if (arrow.name == "Arrow") {
+                Destroy(arrow);
+            }
+        }
+        bow.transform.position = bowResetLocation.position;
+        bow.transform.rotation = bowResetLocation.rotation;
     }
 }

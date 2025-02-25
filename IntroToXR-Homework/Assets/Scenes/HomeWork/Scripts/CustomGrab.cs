@@ -21,13 +21,6 @@ public class CustomGrab : MonoBehaviour
     private Quaternion deltaRot;
     private Quaternion previousRot;
 
-
-    //For hand color changing
-    public Material material1;
-    public Material material2;
-    public Material material3;
-    public GameObject handObject;
-
     //For the extra feature
     //bool isMultiplied = false;
     //public InputActionReference actionForMultiplier;
@@ -53,15 +46,6 @@ public class CustomGrab : MonoBehaviour
         grabbing = action.action.IsPressed();
         if (grabbing)
         {
-            //Change color if grabbing or double grabbing!
-            /*if (!isMultiplied) {
-                handObject.GetComponent<MeshRenderer>().material = material2;
-            } else {
-                handObject.GetComponent<MeshRenderer>().material = material3;
-            }*/
-
-            //handObject.GetComponent<MeshRenderer>().material = material2;
-
             // Grab nearby object or the object in the other hand
             if (!grabbedObject)
                 //DOUBLE GRAB DISABLED
@@ -79,9 +63,23 @@ public class CustomGrab : MonoBehaviour
                 relativePos = grabbedObject.position - transform.position;
                 relativePos = deltaRot * relativePos;
 
-                //Grabbed object's new pos and rot
-                grabbedObject.position = transform.position + relativePos + deltaPos;
-                grabbedObject.rotation = deltaRot * grabbedObject.rotation;
+
+
+                //EXIT LEVER or other object
+                if (grabbedObject.gameObject.name == "ExitLever") {
+                    grabbedObject.LookAt(transform, Vector3.up);
+                    float rotationX = grabbedObject.eulerAngles.x;
+                    grabbedObject.rotation = Quaternion.Euler(rotationX, 0, 0);
+
+                    if (rotationX < 20.0f) {
+                        QuitScript.Quit();
+                    }
+
+                } else {
+                    //Grabbed object's new pos and rot
+                    grabbedObject.position = transform.position + relativePos + deltaPos;
+                    grabbedObject.rotation = deltaRot * grabbedObject.rotation;
+                }
 
 
                 //Add second rotation and position change, if multiplication is set on!
@@ -98,12 +96,6 @@ public class CustomGrab : MonoBehaviour
         // If let go of button, release object
         else if (grabbedObject)
             grabbedObject = null;
-            
-
-        //Change color back to normal, if not grabbing
-        if(!grabbing) {
-            //handObject.GetComponent<MeshRenderer>().material = material1;
-        }
 
         // Should save the current position and rotation here
         previousPos = transform.position;

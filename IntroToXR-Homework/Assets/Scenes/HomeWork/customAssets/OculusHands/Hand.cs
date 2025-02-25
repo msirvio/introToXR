@@ -60,9 +60,13 @@ public class Hand : MonoBehaviour
         var q = rotationWithOffset * Quaternion.Inverse(body.rotation);
         q.ToAngleAxis(out float angle, out Vector3 axis);
 
-        Vector3 rotationDifferenceInDegree = angle * axis;
-
-        body.angularVelocity = (rotationDifferenceInDegree * Mathf.Deg2Rad / Time.fixedDeltaTime);
+        if (Mathf.Abs(axis.magnitude) != Mathf.Infinity) {
+            if (angle > 180.0f) {
+                angle -= 360.0f;
+            }
+            Vector3 rotationDifferenceInDegree = angle * axis;
+            body.angularVelocity = (rotationDifferenceInDegree * Mathf.Deg2Rad / Time.fixedDeltaTime);
+        }
     }
 
     internal void SetGrip(float target) {
